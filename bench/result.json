@@ -1,0 +1,46 @@
+{
+  "generatedAt": "2026-10-31T10:42:09.650Z",
+  "node": "v24.19.0",
+  "resolution": 128,
+  "field": "torus-sphere smooth union (k=0.16)",
+  "cold": {
+    "denseMs": 253.18,
+    "prunedMs": 113.23,
+    "reference256Ms": 1442.83,
+    "speedup": 2.24
+  },
+  "dense": {
+    "samples": 7,
+    "min": 179.22,
+    "median": 183.74,
+    "p95": 256.59,
+    "stddev": 25.76,
+    "relStddev": 0.133,
+    "evals": 2146689,
+    "vertices": 27640,
+    "triangles": 55276
+  },
+  "pruned": {
+    "samples": 7,
+    "min": 77.98,
+    "median": 86.36,
+    "p95": 128.79,
+    "stddev": 16.22,
+    "relStddev": 0.1799,
+    "evals": 144357,
+    "vertices": 27640,
+    "triangles": 55276,
+    "evalReduction": 0.9328,
+    "speedup": 2.13
+  },
+  "identical": true,
+  "geometry": {
+    "volume": 1.811795,
+    "referenceVolume": 1.81294246,
+    "referenceResolution": 256,
+    "volumeErrorPct": 0.063,
+    "maxSdfDeviation": 0.001202,
+    "boundaryEdges": 0,
+    "nonManifoldEdges": 0
+  }
+}

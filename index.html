@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lipschitz Isosurface Studio</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #0b0f14; color: #e6edf3;
+    font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow: hidden; }
+  #view { position: fixed; inset: 0; display: block; }
+  .panel { position: fixed; background: rgba(13, 19, 26, .88); border: 1px solid #24303c;
+    border-radius: 10px; padding: 12px 14px; backdrop-filter: blur(6px); }
+  #hud { top: 16px; left: 16px; width: 330px; }
+  #hud h1 { font-size: 14px; margin: 0 0 2px; letter-spacing: .02em; color: #8ee6c8; }
+  #hud .sub { color: #7d8b99; font-size: 11px; margin-bottom: 10px; }
+  .row { display: flex; justify-content: space-between; gap: 10px; padding: 2px 0; }
+  .row span:first-child { color: #8494a3; }
+  .val { color: #e6edf3; }
+  .good { color: #6ee7a8; }
+  .warn { color: #f2c14e; }
+  hr { border: 0; border-top: 1px solid #22303d; margin: 9px 0; }
+  #controls { bottom: 16px; left: 16px; width: 330px; }
+  label { display: block; color: #8494a3; font-size: 11px; margin-bottom: 4px; }
+  input[type=range] { width: 100%; accent-color: #3ddc97; }
+  .btns { display: flex; gap: 8px; margin-top: 10px; }
+  button { flex: 1; background: #16212c; color: #cfe3dc; border: 1px solid #2b3b49;
+    border-radius: 7px; padding: 7px 8px; font: inherit; font-size: 11px; cursor: pointer; }
+  button:hover { border-color: #3ddc97; }
+  button.on { background: #12352a; border-color: #3ddc97; color: #9df3cf; }
+  #status { position: fixed; bottom: 16px; right: 16px; color: #6f8090; font-size: 11px; text-align: right; }
+  #status b { color: #8ee6c8; font-weight: 500; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="view"></canvas>
+
+<div class="panel" id="hud">
+  <h1>Lipschitz Isosurface Studio</h1>
+  <div class="sub">SDF &rarr; dual-contour mesh &middot; octree pruning by 1-Lipschitz bound</div>
+  <div class="row"><span>resolution</span><span class="val" id="s-res">128&sup3;</span></div>
+  <div class="row"><span>dense SDF evals</span><span class="val" id="s-dense">–</span></div>
+  <div class="row"><span>pruned SDF evals</span><span class="val" id="s-pruned">–</span></div>
+  <div class="row"><span>evaluation cut</span><span class="val good" id="s-cut">–</span></div>
+  <div class="row"><span>triangles</span><span class="val" id="s-tris">–</span></div>
+  <div class="row"><span>volume</span><span class="val" id="s-vol">–</span></div>
+  <div class="row"><span>volume error vs 256&sup3;</span><span class="val" id="s-err">–</span></div>
+  <div class="row"><span>non-manifold edges</span><span class="val" id="s-mm">–</span></div>
+  <hr />
+  <div class="row"><span>mesh vs dense grid</span><span class="val" id="s-ident">–</span></div>
+  <div class="row"><span>compute time (this run)</span><span class="val" id="s-ms">–</span></div>
+  <div class="sub" style="margin:8px 0 0">Every number above is produced by <code>src/core.mjs</code> in this page;
+  <code>node bench/verify.mjs</code> re-runs the same functions and asserts them.</div>
+</div>
+
+<div class="panel" id="controls">
+  <label>grid resolution <span id="lbl-res">128</span> (drag to recompute)</label>
+  <input type="range" id="res" min="4" max="7" step="1" value="7" />
+  <div class="btns">
+    <button id="wire">wireframe</button>
+    <button id="spin" class="on">auto-orbit</button>
+    <button id="reset">reset view</button>
+  </div>
+</div>
+
+<div id="status">drag to orbit &middot; wheel to zoom &middot; <b>node bench/verify.mjs</b></div>
+
+<script type="module" src="./main.js"></script>
+</body>
+</html>
