@@ -1,37 +1,37 @@
 {
-  "generatedAt": "2026-10-31T10:42:09.650Z",
+  "generatedAt": "2026-10-31T10:44:34.518Z",
   "node": "v24.19.0",
   "resolution": 128,
   "field": "torus-sphere smooth union (k=0.16)",
   "cold": {
-    "denseMs": 253.18,
-    "prunedMs": 113.23,
-    "reference256Ms": 1442.83,
-    "speedup": 2.24
+    "denseMs": 264.41,
+    "prunedMs": 113.47,
+    "reference256Ms": 1444.49,
+    "speedup": 2.33
   },
   "dense": {
     "samples": 7,
-    "min": 179.22,
-    "median": 183.74,
-    "p95": 256.59,
-    "stddev": 25.76,
-    "relStddev": 0.133,
+    "min": 180.86,
+    "median": 183.92,
+    "p95": 261.34,
+    "stddev": 27.02,
+    "relStddev": 0.1383,
     "evals": 2146689,
     "vertices": 27640,
     "triangles": 55276
   },
   "pruned": {
     "samples": 7,
-    "min": 77.98,
-    "median": 86.36,
-    "p95": 128.79,
-    "stddev": 16.22,
-    "relStddev": 0.1799,
+    "min": 79.06,
+    "median": 86.66,
+    "p95": 128.35,
+    "stddev": 15.21,
+    "relStddev": 0.1649,
     "evals": 144357,
     "vertices": 27640,
     "triangles": 55276,
     "evalReduction": 0.9328,
-    "speedup": 2.13
+    "speedup": 2.12
   },
   "identical": true,
   "geometry": {

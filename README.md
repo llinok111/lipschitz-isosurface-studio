@@ -1,6 +1,6 @@
 # Lipschitz Isosurface Studio
 
-**Promise:** on a 128³ grid, pruning SDF evaluation with the field's 1-Lipschitz bound cuts sample evaluations from **2,146,689 to 144,357 (−93.3%)** and median mesh-build time from **183.7 ms to 86.4 ms (2.13×)** while producing a mesh that is **bit-identical** (max vertex delta `0`, same index buffer) to the dense pass, closed and manifold (0 non-manifold edges, 0 boundary edges). Baseline: the dense `sampleField` + `surfaceNets` path in `src/core.mjs`, driven by `baseline/naive.mjs`.
+**Promise:** on a 128³ grid, pruning SDF evaluation with the field's 1-Lipschitz bound cuts sample evaluations from **2,146,689 to 144,357 (−93.3%)** and median mesh-build time from **183.9 ms to 86.7 ms (2.12×)** while producing a mesh that is **bit-identical** (max vertex delta `0`, same index buffer) to the dense pass, closed and manifold (0 non-manifold edges, 0 boundary edges). Baseline: the dense `sampleField` + `surfaceNets` path in `src/core.mjs`, driven by `baseline/naive.mjs`.
 
 Upstream: none
 
@@ -35,14 +35,14 @@ python3 -m http.server 4173    # then visit http://localhost:4173
 
 | metric | dense baseline | Lipschitz-pruned |
 | --- | --- | --- |
-| cold start | 253.2 ms | 113.2 ms |
-| median | 183.7 ms | 86.4 ms |
-| p95 | 256.6 ms | 128.8 ms |
-| stddev | 25.8 ms | 16.2 ms |
+| cold start | 264.4 ms | 113.5 ms |
+| median | 183.9 ms | 86.7 ms |
+| p95 | 261.3 ms | 128.4 ms |
+| stddev | 27.0 ms | 15.2 ms |
 | SDF evaluations | 2,146,689 | 144,357 (−93.3%) |
 | vertices / triangles | 27,640 / 55,276 | identical |
 
-Volume at 128³: `1.811795` vs 256³ reference `1.812942` → **0.063%** error. Relative stddev is 13.3% (dense) / 18.0% (pruned), above 10%: this is a shared 4-core VM and each dense run allocates an 8.6 MB `Float32Array` grid, so GC pauses land inside some samples (visible in the p95). The median is stable across runs; the deterministic evaluation counts are the primary claim, wall-clock the secondary one.
+Volume at 128³: `1.811795` vs 256³ reference `1.812942` → **0.063%** error. Relative stddev is 13.8% (dense) / 16.5% (pruned), above 10%: this is a shared 4-core VM and each dense run allocates an 8.6 MB `Float32Array` grid, so GC pauses land inside some samples (visible in the p95). The median is stable across runs; the deterministic evaluation counts are the primary claim, wall-clock the secondary one.
 
 ## 本轮创新
 
@@ -53,7 +53,7 @@ First isosurface extractor in this series that uses the SDF's **1-Lipschitz boun
 1. `sdf()` — smooth union (k=0.16) of an exact sphere SDF and an exact torus SDF; 1-Lipschitz.
 2. `surfaceNets()` — one dual vertex per sign-changing cell, one quad per sign-changing grid edge; quads are wound by the sign direction so normals point outward.
 3. `surfaceNetsPruned()` — octree descent; a node is skipped when `|f(centre)| > halfDiagonal`. Surviving cells are emitted in the same z/y/x order as the dense pass, which is why the output is bit-identical.
-4. `compare()` — runs both, checks position/index equality, volume (divergence theorem), manifold edge counts and max `|sdf|` deviation.
+4. `compare()` — runs both, checks position/index equality elementwise, volume (divergence theorem), manifold edge counts and max `|sdf|` deviation.
 
 ## Layout
 

@@ -43,6 +43,7 @@ const refVolume = meshVolume(ref.positions, ref.indices);
 densePipeline(spec, N, bounds);
 surfaceNetsPruned(spec, N, bounds);
 
+let identical = false;
 const denseTimes = [];
 const prunedTimes = [];
 for (let i = 0; i < REPS; i++) {
@@ -53,9 +54,16 @@ for (let i = 0; i < REPS; i++) {
   const p = surfaceNetsPruned(spec, N, bounds);
   prunedTimes.push(now() - t);
   if (i === 0) {
-    let maxDiff = 0;
-    for (let k = 0; k < d.positions.length; k++) maxDiff = Math.max(maxDiff, Math.abs(d.positions[k] - p.positions[k]));
-    if (maxDiff !== 0 || d.indices.length !== p.indices.length) throw new Error("pruned mesh diverged from dense mesh");
+    let maxDiff = d.positions.length === p.positions.length ? 0 : Infinity;
+    for (let k = 0; k < d.positions.length && k < p.positions.length; k++) {
+      maxDiff = Math.max(maxDiff, Math.abs(d.positions[k] - p.positions[k]));
+    }
+    let indexMismatch = d.indices.length === p.indices.length ? 0 : 1;
+    for (let k = 0; k < d.indices.length && k < p.indices.length; k++) {
+      if (d.indices[k] !== p.indices[k]) { indexMismatch++; break; }
+    }
+    identical = maxDiff === 0 && indexMismatch === 0;
+    if (!identical) throw new Error("pruned mesh diverged from dense mesh");
   }
 }
 
@@ -85,7 +93,7 @@ const result = {
     evalReduction: +coldPruned.evalReduction.toFixed(4),
     speedup: +(dense.median / pruned.median).toFixed(2),
   },
-  identical: true,
+  identical,
   geometry: {
     volume: +volume.toFixed(6),
     referenceVolume: +refVolume.toFixed(9),
